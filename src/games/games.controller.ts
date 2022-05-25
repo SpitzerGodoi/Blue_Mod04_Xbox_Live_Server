@@ -22,7 +22,7 @@ export class GamesController {
 
   @Get()
   @ApiOperation({
-    summary: 'Listar OS Jogos',
+    summary: 'Listar os jogos',
   })
   findAll(): Promise<Game[]> {
     return this.gameService.findAll();

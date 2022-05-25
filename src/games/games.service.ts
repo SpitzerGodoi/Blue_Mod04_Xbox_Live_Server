@@ -1,4 +1,4 @@
-import { PrismaService } from './prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateGamesDto } from './dto/create-games.dto';
 import { UpdateGamesDto } from './dto/update-games.dto';
@@ -49,6 +49,6 @@ export class GamesService {
   async delete(id: string) {
     await this.findById(id);
 
-    await this.prisma.genre.delete({ where: { id } });
+    await this.prisma.game.delete({ where: { id } });
   }
 }
