@@ -1,7 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateGenreDto } from './dto/create-genre.dto';
 import { UpdateGenreDto } from './dto/update-genre.dto';
+import { handleError } from 'src/utils/handle-error.util';
 import { Genre } from './entities/genre.entity';
 
 @Injectable()
@@ -11,19 +12,16 @@ export class GenreService {
   findAll(): Promise<Genre[]> {
     return this.prisma.genre.findMany();
   }
-  handleError(error: Error) {
-    console.log(error.message);
 
-    return undefined;
-  }
-
-  async findById(id: string): Promise<Genre> {
-    const record = await this.prisma.genre.findUnique({ where: { id } });
-
+  async findById(name: string): Promise<Genre> {
+    const record = await this.prisma.genre.findUnique({
+      where: {
+        name,
+      },
+    });
     if (!record) {
-      throw new NotFoundException(`Registro com o '${id}' não encontrado.`);
+      throw new NotFoundException(`Registro com o ID '${name}' não encontrado`);
     }
-
     return record;
   }
 
@@ -34,7 +32,7 @@ export class GenreService {
   create(dto: CreateGenreDto): Promise<Genre> {
     const data: Genre = { ...dto };
 
-    return this.prisma.genre.create({ data }).catch(this.handleError);
+    return this.prisma.genre.create({ data }).catch(handleError);
   }
   async update(id: string, dto: UpdateGenreDto): Promise<Genre> {
     await this.findById(id);

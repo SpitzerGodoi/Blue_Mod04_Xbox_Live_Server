@@ -8,21 +8,25 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { CreateGamesDto } from './dto/create-games.dto';
 import { UpdateGamesDto } from './dto/update-games.dto';
 import { GamesService } from './games.service';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Game } from './entities/games.entity';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('games')
+@UseGuards(AuthGuard())
+@ApiBearerAuth()
 @Controller('games')
 export class GamesController {
   constructor(private readonly gameService: GamesService) {}
 
   @Get()
   @ApiOperation({
-    summary: 'Listar os jogos',
+    summary: 'Listar OS Jogos',
   })
   findAll(): Promise<Game[]> {
     return this.gameService.findAll();
