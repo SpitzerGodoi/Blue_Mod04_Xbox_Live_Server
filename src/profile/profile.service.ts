@@ -13,7 +13,7 @@ export class ProfileService {
     return this.prisma.profile.findMany({
       include: {
         user: true,
-        games: true,
+        Favoritos: true,
       },
     });
   }
@@ -23,7 +23,7 @@ export class ProfileService {
       where: {
         id: id,
       },
-      include: { games: true },
+      include: { Favoritos: true },
     });
     if (!record) {
       throw new NotFoundException(`Registro com o ID '${id}' não encontrado`);
@@ -35,21 +35,21 @@ export class ProfileService {
     return this.findById(id);
   }
 
-  async create(dto: CreateProfileDto): Promise<Profile> {
+  async create(userId: string, dto: CreateProfileDto): Promise<Profile> {
     if (dto.gameId) {
       return await this.prisma.profile
         .create({
           data: {
             name: dto.name,
             image: dto.image,
-            userId: dto.userId,
-            games: {
+            userId: userId,
+            Favoritos: {
               connect: {
                 id: dto.gameId,
               },
             },
           },
-          include: { games: true, user: true },
+          include: { Favoritos: true, user: true },
         })
         .catch(handleError);
     } else {
@@ -58,15 +58,15 @@ export class ProfileService {
           data: {
             name: dto.name,
             image: dto.image,
-            userId: dto.userId,
+            userId: userId,
           },
-          include: { games: true },
+          include: { Favoritos: true },
         })
         .catch(handleError);
     }
   }
 
-  async update(id: string, dto: UpdateProfileDto) {
+  async update(userId: string, id: string, dto: UpdateProfileDto) {
     await this.findById(id);
     if (dto.gameId) {
       return this.prisma.profile
@@ -75,14 +75,14 @@ export class ProfileService {
           data: {
             name: dto.name,
             image: dto.image,
-            userId: dto.userId,
-            games: {
+            userId: userId,
+            Favoritos: {
               connect: {
                 id: dto.gameId,
               },
             },
           },
-          include: { games: true },
+          include: { Favoritos: true },
         })
         .catch(handleError);
     } else {
@@ -92,9 +92,9 @@ export class ProfileService {
           data: {
             name: dto.name,
             image: dto.image,
-            userId: dto.userId,
+            userId: userId,
           },
-          include: { games: true },
+          include: { Favoritos: true },
         })
         .catch(handleError);
     }

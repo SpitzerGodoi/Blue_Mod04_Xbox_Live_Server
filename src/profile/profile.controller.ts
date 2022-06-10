@@ -8,14 +8,20 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { User } from '@prisma/client';
+import { LoggedUser } from 'src/auth/logged-user.decorator';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { Profile } from './entities/profile.entity';
 import { ProfileService } from './profile.service';
 
 @ApiTags('profile')
+@UseGuards(AuthGuard())
+@ApiBearerAuth()
 @Controller('profile')
 export class ProfileController {
   constructor(private readonly profileService: ProfileService) {}
@@ -40,18 +46,19 @@ export class ProfileController {
   @ApiOperation({
     summary: 'Criar um Perfil',
   })
-  create(@Body() dto: CreateProfileDto): Promise<Profile> {
-    return this.profileService.create(dto);
+  create(@LoggedUser() user: User, @Body() createProfileDto: CreateProfileDto) {
+    return this.profileService.create(user.id, createProfileDto);
   }
   @Patch(':id')
   @ApiOperation({
     summary: 'Editar um Perfil pelo ID',
   })
   update(
+    @LoggedUser() user: User,
     @Param('id') id: string,
-    @Body() dto: UpdateProfileDto,
-  ): Promise<Profile> {
-    return this.profileService.update(id, dto);
+    @Body() updateProfileDto: UpdateProfileDto,
+  ) {
+    return this.profileService.update(user.id, id, updateProfileDto);
   }
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)

@@ -12,14 +12,14 @@ export class CreateUserDto {
   @IsString()
   @ApiProperty({
     description: 'nome de usuário',
-    example: 'leandrospitzer',
+    example: 'chrisktventura',
   })
   nickname: string;
 
   @IsEmail()
   @ApiProperty({
     description: 'email de usuário para login',
-    example: 'leandro_spitzer@hotmail.com',
+    example: 'chrisventura@gmail.com',
   })
   email: string;
 
