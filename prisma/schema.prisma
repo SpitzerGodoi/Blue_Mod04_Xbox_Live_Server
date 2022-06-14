@@ -17,10 +17,11 @@ model Game {
   urlTrailerYT  String
   urlGameplayYT String
   genres   Genre[]
+  profiles Profile[]
   updateAt DateTime @updatedAt @map("updated_at")
   createAt DateTime @default(now()) @map("created_at")
   @@map("game")
-  Favoritos Favoritos[]
+  favoritos Favoritos[]
 }
 
 model Genre {
@@ -35,10 +36,11 @@ model Profile {
   image String
   user   User   @relation(fields: [userId], references: [id])
   userId String
+  games Game[]
+  favoritos Favoritos[]
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   @@map("profile")
-  Favoritos Favoritos[]
 }
 
 model User {
@@ -47,7 +49,7 @@ model User {
   email    String  @unique
   password String
   cpf      Int     @unique
-
+  isAdmin  Boolean @default(false)
   profile Profile[]
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

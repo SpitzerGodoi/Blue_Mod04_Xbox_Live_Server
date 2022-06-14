@@ -13,7 +13,7 @@ export class ProfileService {
     return this.prisma.profile.findMany({
       include: {
         user: true,
-        Favoritos: true,
+        favoritos: true,
       },
     });
   }
@@ -23,7 +23,7 @@ export class ProfileService {
       where: {
         id: id,
       },
-      include: { Favoritos: true },
+      include: { favoritos: true },
     });
     if (!record) {
       throw new NotFoundException(`Registro com o ID '${id}' não encontrado`);
@@ -43,13 +43,13 @@ export class ProfileService {
             name: dto.name,
             image: dto.image,
             userId: userId,
-            Favoritos: {
+            favoritos: {
               connect: {
                 id: dto.gameId,
               },
             },
           },
-          include: { Favoritos: true, user: true },
+          include: { favoritos: true, user: true },
         })
         .catch(handleError);
     } else {
@@ -60,7 +60,7 @@ export class ProfileService {
             image: dto.image,
             userId: userId,
           },
-          include: { Favoritos: true },
+          include: { favoritos: true },
         })
         .catch(handleError);
     }
@@ -76,13 +76,13 @@ export class ProfileService {
             name: dto.name,
             image: dto.image,
             userId: userId,
-            Favoritos: {
+            favoritos: {
               connect: {
                 id: dto.gameId,
               },
             },
           },
-          include: { Favoritos: true },
+          include: { favoritos: true },
         })
         .catch(handleError);
     } else {
@@ -94,7 +94,7 @@ export class ProfileService {
             image: dto.image,
             userId: userId,
           },
-          include: { Favoritos: true },
+          include: { favoritos: true },
         })
         .catch(handleError);
     }

@@ -60,9 +60,6 @@ export class GamesService {
       return await this.prisma.game
         .create({
           data,
-          include: {
-            genres: true,
-          },
         })
         .catch(handleError);
     } else {
